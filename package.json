@@ -1,18 +1,47 @@
 {
-  "name": "mls_blitzer",
+  "name": "grunt-blitz",
+  "description": "Run blitz.io sprints and rushes from grunt",
   "version": "0.1.0",
-  "description": "Script to load test mls",
-  "main": "index.js",
-  "scripts": {
-    "test": "test"
+  "homepage": "https://github.com/CDSMOpen/blitzer_poc",
+  "author": {
+    "name": "Darren Wallace",
+    "email": "wallace@midweekcrisis.com",
+    "url": "www.midweekcrisis.com"
   },
-  "repository": "",
-  "keywords": [
-    "blitz",
-    "load",
-    "mls"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/CDSMOpen/blitzer_poc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CDSMOpen/blitzer_poc/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/CDSMOpen/blitzer_poc/blob/master/LICENSE-MIT"
+    }
   ],
-  "author": "DDubyah",
-  "license": "BSD",
-  "gitHead": "1ef87bd70cbdc4933d40caefae793f3d2eb69821"
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.1.2",
+    "grunt": "~0.4.1",
+    "grunt-mocha-cli": "~1.0.6",
+    "sinon-chai": "~2.4.0",
+    "chai": "~1.6.0",
+    "sinon": "~1.7.2"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
 }
