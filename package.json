@@ -1,0 +1,18 @@
+{
+  "name": "mls_blitzer",
+  "version": "0.1.0",
+  "description": "Script to load test mls",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": "",
+  "keywords": [
+    "blitz",
+    "load",
+    "mls"
+  ],
+  "author": "DDubyah",
+  "license": "BSD",
+  "gitHead": "1ef87bd70cbdc4933d40caefae793f3d2eb69821"
+}
