@@ -195,5 +195,5 @@ targets.push 'api/playlists'
 app = App.new
 
 # Parameters are, Base Url, list of relative urls to test, concurrent users to test, time to test
-app.init 'https://staging.mylearningspace.org.uk/', targets, 250, 10
+app.init 'https://staging.mylearningspace.org.uk/', targets, 100, 10
 app.execute
