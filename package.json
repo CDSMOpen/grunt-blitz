@@ -38,12 +38,16 @@
     "sinon": "~1.7.2",
     "grunt-contrib-coffee": "~0.7.0",
     "coffee-script": "~1.6.2",
-    "grunt-contrib-watch": "~0.4.4"
+    "grunt-contrib-watch": "~0.4.4",
+    "sandboxed-module": "~0.2.0"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"
   },
   "keywords": [
     "gruntplugin"
-  ]
+  ],
+  "dependencies": {
+    "blitz": "~0.4.1"
+  }
 }

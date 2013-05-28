@@ -20,9 +20,9 @@ module.exports = (grunt) ->
         files: ["test/**/*test.coffee"]
         tasks: ["mochacli:spec"]
 
-      simplemocha:
-        files: ["test/**/*test.coffee"]
-        tasks: ["simplemocha:spec"]
+      compile:
+        files: ["src/**/*.coffee"]
+        tasks: ["coffee:compile", "mochacli:spec"]
 
     
     # Before generating any new files, remove any previously-created files.
@@ -55,18 +55,16 @@ module.exports = (grunt) ->
     
     # Configuration to be run (and then tested).
     blitz:
-      options:
-        blitzid: 'software@cdsm.co.uk'
-        blitzkey: 'duffkey'
+      # options:
+      #   blitzid: 'software@cdsm.co.uk' 
+      #   blitzkey: 'your_blitz_api_key_here'
 
-      sprint:
+
+      cdsm:
         options: 
-          blitzid: 'Tester'
+          url: 'http://www.cdsm.co.uk'
+      
 
-      rush:
-        options:
-          blitzid: 'office@cdsm.co.uk'
-          blitzkey: 'duffkey'
 
   
   # Actually load this plugin's task(s).
@@ -84,4 +82,4 @@ module.exports = (grunt) ->
   grunt.registerTask "test", ["clean", "coffee", "mochacli:spec"]
   
   # By default, lint and run all tests.
-  grunt.registerTask "default", ["test", "watch:mochacli"]
+  grunt.registerTask "default", ["test", "watch"]
