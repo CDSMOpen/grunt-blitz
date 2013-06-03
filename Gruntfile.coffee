@@ -32,9 +32,15 @@ module.exports = (grunt) ->
     coffee:
       compile:
         expand: true
-        cwd: 'src'
+        cwd: 'task_src'
         src: ['**/*.coffee']
         dest: 'tasks'
+        ext: '.js'
+      ,
+        expand: true
+        cwd: 'src'
+        src: ['**/*.coffee']
+        dest: 'lib'
         ext: '.js'
     
     mochacli:
@@ -55,14 +61,13 @@ module.exports = (grunt) ->
     
     # Configuration to be run (and then tested).
     blitz:
-      # options:
-      #   blitzid: 'software@cdsm.co.uk' 
-      #   blitzkey: 'your_blitz_api_key_here'
-
-
       cdsm:
-        options: 
-          url: 'http://www.cdsm.co.uk'
+        options:
+          logsPath: 'logs'
+          blitzid: 'software@cdsm.co.uk' 
+          blitzkey: '8085cffe-45fefbe5-628f83bb-484295ee'
+          blitz: '-r ireland http://www.cdsm.co.ukduff'
+
       
 
 
