@@ -31,17 +31,19 @@ module.exports = (grunt) ->
 
     coffee:
       compile:
-        expand: true
-        cwd: 'task_src'
-        src: ['**/*.coffee']
-        dest: 'tasks'
-        ext: '.js'
-      ,
-        expand: true
-        cwd: 'src'
-        src: ['**/*.coffee']
-        dest: 'lib'
-        ext: '.js'
+        files: [
+          expand: true
+          cwd: 'task_src'
+          src: ['**/*.coffee']
+          dest: 'tasks'
+          ext: '.js'
+        ,
+          expand: true
+          cwd: 'src'
+          src: ['**/*.coffee']
+          dest: 'lib'
+          ext: '.js'
+        ]
     
     mochacli:
       options:

@@ -53,9 +53,6 @@ module.exports = (grunt) ->
       console.log "reason: "+ response.reason
       done()
 
-_makeLogsPath = (grunt)->
-  console.log "Making log directory"
-  grunt.file.mkdir options.logsPath unless grunt.file.isDir options.logsPath
 
     
 
