@@ -21,13 +21,13 @@ module.exports = (grunt) ->
         tasks: ["mochacli:spec"]
 
       compile:
-        files: ["src/**/*.coffee"]
+        files: ["task_src/**/*.coffee", "src/**/*.coffee"]
         tasks: ["coffee:compile", "mochacli:spec"]
 
     
     # Before generating any new files, remove any previously-created files.
     clean:
-      tests: ["tmp"]
+      tests: ["tmp", "logs"]
 
     coffee:
       compile:
@@ -63,12 +63,13 @@ module.exports = (grunt) ->
     
     # Configuration to be run (and then tested).
     blitz:
-      cdsm:
+      test:
         options:
-          logsPath: 'logs'
+          logPath: 'logs'
           blitzid: 'software@cdsm.co.uk' 
           blitzkey: '8085cffe-45fefbe5-628f83bb-484295ee'
           blitz: '-r ireland http://www.cdsm.co.ukduff'
+          messageFormatters: ''
 
       
 

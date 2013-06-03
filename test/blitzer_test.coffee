@@ -6,10 +6,13 @@ winston = require 'winston'
 # set up sandboxed modules
 
 blitzInstance = {
-	on: (event, callback)->
-		console.log "Listening to #{event}"
 	execute: (command)->
 		console.log "Executing command '#{command}'"
+}
+
+rushInstance = {
+	on: (event, callback)->
+		console.log "Listening to #{event}"
 }
 
 winstonInstance = {
@@ -67,12 +70,12 @@ describe "blitzer", ->
 			blitzOptions = 
 				blitz: '-r ireland http://www.cdsm.co.uk'
 				logPath: './some/duff/file.txt'
-			sinon.stub blitzInstance, 'execute'
-			sinon.stub blitzInstance, 'on'
+			sinon.stub(blitzInstance, 'execute').returns rushInstance
+			sinon.stub rushInstance, 'on'
 			sinon.stub( winstonInstance, 'logger').returns loggerInstance
 			sinon.stub loggerInstance, 'add'
 
-			blitzInstance.on.withArgs("complete").yields {
+			rushInstance.on.withArgs("complete").yields {
 				region: 'ireland'
 				duration: 10
 				steps: []
@@ -82,7 +85,7 @@ describe "blitzer", ->
 
 		afterEach ->
 			blitzInstance.execute.restore()
-			blitzInstance.on.restore()
+			rushInstance.on.restore()
 			winstonInstance.logger.restore()
 			loggerInstance.add.restore()
 
@@ -115,12 +118,12 @@ describe "blitzer", ->
 			blitzOptions = 
 				blitz: '-r ireland http://www.cdsm.co.uk'
 				logPath: './some/duff/file.txt'
-			sinon.stub blitzInstance, 'execute'
-			sinon.stub blitzInstance, 'on'
+			sinon.stub( blitzInstance, 'execute').returns rushInstance
+			sinon.stub rushInstance, 'on'
 			sinon.stub( winstonInstance, 'logger').returns loggerInstance
 			sinon.stub loggerInstance, 'add'
 
-			blitzInstance.on.withArgs("error").yields {
+			rushInstance.on.withArgs("error").yields {
 				error: 'duff error'
 				reason: 'error description'
 			}
@@ -129,7 +132,7 @@ describe "blitzer", ->
 
 		afterEach ->
 			blitzInstance.execute.restore()
-			blitzInstance.on.restore()
+			rushInstance.on.restore()
 			winstonInstance.logger.restore()
 			loggerInstance.add.restore()
 
