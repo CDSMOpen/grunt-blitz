@@ -24,6 +24,7 @@ buildLogger = new winston.Logger {
 			filename: './test/labs/error.log'
 			colorize: false
 			json: false
+			level: 'info'
 		}
 	]
 }
@@ -42,6 +43,7 @@ buildLogger = new winston.Logger {
 # }
 
 logger = buildLogger
+
 logger.info 'This is some info'
 logger.warn 'watch out'
 logger.build 'this is a build message \n##teamcity[testStarted]'

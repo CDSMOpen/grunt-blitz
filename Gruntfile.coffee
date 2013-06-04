@@ -65,11 +65,10 @@ module.exports = (grunt) ->
     blitz:
       test:
         options:
-          logPath: 'logs'
-          blitzid: 'software@cdsm.co.uk' 
-          blitzkey: '8085cffe-45fefbe5-628f83bb-484295ee'
-          blitz: '-r ireland http://www.cdsm.co.ukduff'
-          messageFormatters: ''
+          logPath: './logs/test.log'
+          blitzid: 'account@mail.co.uk' # your account email with blitz.io 
+          blitzkey: 'your-blitz-key' # from your blitz.io account
+          blitz: '-r ireland http://www.cdsm.co.uk'
 
       
 

@@ -20,14 +20,13 @@ module.exports = (grunt) ->
     options = @options(
       blitzid: grunt.option 'blitzid'
       blitzkey: grunt.option 'blitzkey'
+      logPath: grunt.option 'logPath'
     )
 
     @requiresConfig "blitzid" unless options.blitzid?
     @requiresConfig "blitzkey" unless options.blitzkey?
 
     blitz = new Blitzer options.blitzid, options.blitzkey, options
-    console.log "Blitzing!"
-
     blitz.run done
 
 

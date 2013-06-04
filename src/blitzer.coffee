@@ -14,26 +14,26 @@ module.exports = class Blitzer
 	constructor: (@blitzId, @blitzKey, options)->
 		@options = Hash.update options, Blitzer.DEFAULTS
 		@blitz = new Blitz @blitzId, @blitzKey
-
 		@logger = @_makeLogger()
 		@_addFileLogging(@logger, @options.logPath) if @options.logPath
+
 
 	run: (done)-> 	
 		if @options.blitz?
 			rush = @blitz.execute @options.blitz 
-			@logger.event @options.eventPatterns.blitzStart, @options.blitz
+			@logger.log 'event', @options.eventPatterns.blitzStart, @options.blitz
 		else 
 			done() if done?
 
 		rush.on "error", (response)=>
 			@logger.error "error: "+ response.error, response
-			@logger.event @options.eventPatterns.blitzError, response.error, response.reason
+			@logger.log "event", @options.eventPatterns.blitzError, response.error, response
 			done()
 
 		rush.on "complete", (data)=>
-			@logger.info "Region: "+ data.region
-			@logger.info "Duration: "+ data.duration
-			@logger.event @options.eventPatterns.blitzComplete, data.duration
+			@logger.info "Blitz Complete in "+ data.duration
+			@logger.info data
+			@logger.log "event", @options.eventPatterns.blitzComplete, data.duration
 
 			for step in data.steps
 				@logger.info "Step: "+ step.connect, step
@@ -41,16 +41,16 @@ module.exports = class Blitzer
 			done()
 
 	_addFileLogging: (logger, logPath)->
-		logger.add new Winston.transports.File 
+		logger.info "logging to file ", logPath
+		logger.add Winston.transports.File, 
 			filename: logPath
-			level: 'info'
 			colorize: false
-			json: false
+			json: true
+			level: 'event'
 
 	_makeLogger: (logPath)->
 		customLevels = @_getLogLevels()
-
-		logger = new Winston.logger {
+		logger = new Winston.Logger {
 			transports: [
 				new (Winston.transports.Console)({
 					colorize: true

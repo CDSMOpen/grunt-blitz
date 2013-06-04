@@ -19,7 +19,7 @@ winstonInstance = {
 	transports:
 		Console: sinon.stub()
 		File: sinon.stub()
-	logger: (options)->
+	Logger: (options)->
 		console.log "new logger"
 }
 
@@ -50,11 +50,11 @@ describe "blitzer", ->
 		beforeEach ->
 			blitzOptions = {
 			}
-			sinon.stub winstonInstance, 'logger'
+			sinon.stub winstonInstance, 'Logger'
 			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', blitzOptions)
 
 		afterEach ->
-			winstonInstance.logger.restore()
+			winstonInstance.Logger.restore()
 
 		it "should create a blitz instance", ->
 			blitzConstructor.should.have.been.calledWithNew
@@ -79,7 +79,7 @@ describe "blitzer", ->
 
 			sinon.stub(blitzInstance, 'execute').returns rushInstance
 			sinon.stub rushInstance, 'on'
-			sinon.stub( winstonInstance, 'logger').returns loggerInstance
+			sinon.stub( winstonInstance, 'Logger').returns loggerInstance
 			sinon.stub loggerInstance, 'add'
 
 			rushInstance.on.withArgs("complete").yields {
@@ -93,7 +93,7 @@ describe "blitzer", ->
 		afterEach ->
 			blitzInstance.execute.restore()
 			rushInstance.on.restore()
-			winstonInstance.logger.restore()
+			winstonInstance.Logger.restore()
 			loggerInstance.add.restore()
 
 		it "should use blitz to run the test", (done)->
@@ -107,7 +107,7 @@ describe "blitzer", ->
 				done()
 		it "should log a blitz start event", (done)->
 			@sut.run =>
-				loggerInstance.event.should.have.been.calledWith @blitzOptions.eventPatterns.blitzStart, '-r ireland http://www.cdsm.co.uk'
+				loggerInstance.log.should.have.been.calledWith 'event', @blitzOptions.eventPatterns.blitzStart, '-r ireland http://www.cdsm.co.uk'
 				done()
 
 		describe "logging with options.logPath defined", ->
@@ -115,8 +115,7 @@ describe "blitzer", ->
 				winstonInstance.transports.Console.should.have.been.calledWithNew
 
 			it "should log to the path provided", ->
-				winstonInstance.transports.File.should.have.been.calledWithNew
-				loggerInstance.add.should.have.been.calledOnce
+				loggerInstance.add.should.have.been.calledWith winstonInstance.transports.File
 
 		describe "on complete", ->
 			it "should log the blitz results", (done)->
@@ -125,7 +124,7 @@ describe "blitzer", ->
 					done()
 			it "should log the blitz complete event", (done)->
 				@sut.run =>
-					loggerInstance.event.should.have.been.calledWith @blitzOptions.eventPatterns.blitzComplete, 10
+					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzComplete, 10
 					done()
 
 
@@ -141,7 +140,7 @@ describe "blitzer", ->
 
 			sinon.stub( blitzInstance, 'execute').returns rushInstance
 			sinon.stub rushInstance, 'on'
-			sinon.stub( winstonInstance, 'logger').returns loggerInstance
+			sinon.stub( winstonInstance, 'Logger').returns loggerInstance
 			sinon.stub loggerInstance, 'add'
 
 			rushInstance.on.withArgs("error").yields {
@@ -154,7 +153,7 @@ describe "blitzer", ->
 		afterEach ->
 			blitzInstance.execute.restore()
 			rushInstance.on.restore()
-			winstonInstance.logger.restore()
+			winstonInstance.Logger.restore()
 			loggerInstance.add.restore()
 
 		it "should log the blitz error", (done)->
@@ -164,6 +163,6 @@ describe "blitzer", ->
 
 		it "should log the blitz error event", (done)->
 			@sut.run =>
-				loggerInstance.event.should.have.been.calledWith @blitzOptions.eventPatterns.blitzError, 'duff error', 'error description'
+				loggerInstance.log.should.have.been.calledWith 'event', @blitzOptions.eventPatterns.blitzError, 'duff error'
 				done()
 
