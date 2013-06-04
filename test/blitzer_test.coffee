@@ -28,6 +28,8 @@ loggerInstance = {
 		# console.log "Adding log"
 	log: sinon.stub()
 	error: sinon.stub()
+	info: sinon.stub()
+	event: sinon.stub()
 }
 
 blitzConstructor = sinon.stub().returns blitzInstance
@@ -67,9 +69,14 @@ describe "blitzer", ->
 
 	describe "running a blitz", ->
 		beforeEach ->
-			blitzOptions = 
+			@blitzOptions = 
 				blitz: '-r ireland http://www.cdsm.co.uk'
 				logPath: './some/duff/file.txt'
+				eventPatterns: 
+					blitzStart: "## Blitz start %s"
+					blitzError: "## Blitz error %s"
+					blitzComplete: "## Blitz complete"
+
 			sinon.stub(blitzInstance, 'execute').returns rushInstance
 			sinon.stub rushInstance, 'on'
 			sinon.stub( winstonInstance, 'logger').returns loggerInstance
@@ -81,7 +88,7 @@ describe "blitzer", ->
 				steps: []
 			}
 
-			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', blitzOptions)
+			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', @blitzOptions)
 
 		afterEach ->
 			blitzInstance.execute.restore()
@@ -98,6 +105,10 @@ describe "blitzer", ->
 			@sut.run ->
 				blitzInstance.execute.should.have.been.calledWith '-r ireland http://www.cdsm.co.uk'
 				done()
+		it "should log a blitz start event", (done)->
+			@sut.run =>
+				loggerInstance.event.should.have.been.calledWith @blitzOptions.eventPatterns.blitzStart, '-r ireland http://www.cdsm.co.uk'
+				done()
 
 		describe "logging with options.logPath defined", ->
 			it "should log to the console", ->
@@ -109,15 +120,25 @@ describe "blitzer", ->
 
 		describe "on complete", ->
 			it "should log the blitz results", (done)->
-				@sut.run ->
-					loggerInstance.log.should.have.been.called
+				@sut.run =>
+					loggerInstance.info.should.have.been.called
 					done()
+			it "should log the blitz complete event", (done)->
+				@sut.run =>
+					loggerInstance.event.should.have.been.calledWith @blitzOptions.eventPatterns.blitzComplete, 10
+					done()
+
 
 	describe "log errors", ->
 		beforeEach ->
-			blitzOptions = 
+			@blitzOptions = 
 				blitz: '-r ireland http://www.cdsm.co.uk'
 				logPath: './some/duff/file.txt'
+				eventPatterns: 
+					blitzStart: "## Blitz start %s"
+					blitzError: "## Blitz error %s"
+					blitzComplete: "## Blitz complete"
+
 			sinon.stub( blitzInstance, 'execute').returns rushInstance
 			sinon.stub rushInstance, 'on'
 			sinon.stub( winstonInstance, 'logger').returns loggerInstance
@@ -128,7 +149,7 @@ describe "blitzer", ->
 				reason: 'error description'
 			}
 
-			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', blitzOptions)
+			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', @blitzOptions)
 
 		afterEach ->
 			blitzInstance.execute.restore()
@@ -139,5 +160,10 @@ describe "blitzer", ->
 		it "should log the blitz error", (done)->
 			@sut.run ->
 				loggerInstance.error.should.have.been.called
+				done()
+
+		it "should log the blitz error event", (done)->
+			@sut.run =>
+				loggerInstance.event.should.have.been.calledWith @blitzOptions.eventPatterns.blitzError, 'duff error', 'error description'
 				done()
 

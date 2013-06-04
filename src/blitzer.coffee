@@ -2,44 +2,78 @@
 
 Blitz = require 'blitz'
 Winston = require 'winston'
+Hash = require 'hashish'
 
 module.exports = class Blitzer
-	constructor: (@blitzId, @blitzKey, @options)->
-		@blitz = new Blitz @blitzid, @blitzkey
-		console.log "Making blitzer"
+	@DEFAULTS:
+		eventPatterns: 
+			blitzStart: "Blitz start: %s"
+			blitzError: "Blitz error: %s"
+			blitzComplete: "Blitz complete: %s"
 
-		@logger = new Winston.logger {
-			transports: [
-				new (Winston.transports.Console)()
-			]
-		} 
-		console.log "Logger ready"
+	constructor: (@blitzId, @blitzKey, options)->
+		@options = Hash.update options, Blitzer.DEFAULTS
+		@blitz = new Blitz @blitzId, @blitzKey
 
-		@_addLogging @options.logPath if @options.logPath
+		@logger = @_makeLogger()
+		@_addFileLogging(@logger, @options.logPath) if @options.logPath
 
-		console.log "File transport added"
-	
 	run: (done)-> 	
 		if @options.blitz?
 			rush = @blitz.execute @options.blitz 
+			@logger.event @options.eventPatterns.blitzStart, @options.blitz
 		else 
 			done() if done?
 
 		rush.on "error", (response)=>
-			@logger.error "error: "+ response.error
-			@logger.error "reason: "+ response.reason, response
+			@logger.error "error: "+ response.error, response
+			@logger.event @options.eventPatterns.blitzError, response.error, response.reason
 			done()
 
 		rush.on "complete", (data)=>
-			@logger.log "Region: "+ data.region
-			@logger.log "Duration: "+ data.duration
+			@logger.info "Region: "+ data.region
+			@logger.info "Duration: "+ data.duration
+			@logger.event @options.eventPatterns.blitzComplete, data.duration
 
 			for step in data.steps
-				@logger.log "Step: "+ step.connect, step
+				@logger.info "Step: "+ step.connect, step
 
 			done()
 
-	_addLogging: (logPath)->
-		@logger.add new Winston.transports.File filename: logPath
+	_addFileLogging: (logger, logPath)->
+		logger.add new Winston.transports.File 
+			filename: logPath
+			level: 'info'
+			colorize: false
+			json: false
+
+	_makeLogger: (logPath)->
+		customLevels = @_getLogLevels()
+
+		logger = new Winston.logger {
+			transports: [
+				new (Winston.transports.Console)({
+					colorize: true
+					level: 'event'
+				})
+			]
+			levels: customLevels.levels
+			colors: customLevels.colors
+		} 
+		logger
+
+	_getLogLevels: ->
+		customLevels = {
+			levels:
+				event: 1
+				info: 2
+				warn: 3
+				error: 4
+			colors:
+				event: 'white'
+				info: 'white'
+				warn: 'yellow'
+				error: 'red'
+		}
 
 
