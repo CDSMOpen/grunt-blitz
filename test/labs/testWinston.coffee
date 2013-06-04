@@ -21,7 +21,7 @@ buildLogger = new winston.Logger {
 			level: 'build'
 		}
 		new winston.transports.File {
-			filename: './test/labs/error.log'
+			filename: './test/labs/logs/error.log'
 			colorize: false
 			json: false
 			level: 'info'
