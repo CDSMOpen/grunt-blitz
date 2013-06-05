@@ -92,6 +92,7 @@ module.exports = (grunt) ->
   # plugin's task(s), then test the result.
   grunt.registerTask "test", ["clean", "coffee", "mochacli:spec"]
   grunt.registerTask "test-build", ["clean", "coffee", "mochacli:build"]
+  grunt.registerTask "build", ["test"]  
   
   # By default, lint and run all tests.
   grunt.registerTask "default", ["test", "watch"]
