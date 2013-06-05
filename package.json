@@ -41,8 +41,7 @@
     "grunt-contrib-coffee": "~0.7.0",
     "coffee-script": "~1.6.2",
     "grunt-contrib-watch": "~0.4.4",
-    "sandboxed-module": "~0.2.0",
-    "hashish": "0.0.4"
+    "sandboxed-module": "~0.2.0"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"
@@ -52,6 +51,7 @@
   ],
   "dependencies": {
     "blitz": "~0.4.1",
-    "winston": "~0.7.1"
+    "winston": "~0.7.1",
+    "hashish": "0.0.4"
   }
 }
