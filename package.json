@@ -2,6 +2,7 @@
   "name": "grunt-blitz",
   "description": "Run blitz.io sprints and rushes from grunt",
   "version": "0.1.0",
+  "private": true,
   "homepage": "https://github.com/CDSMOpen/blitzer_poc",
   "author": {
     "name": "Darren Wallace",
