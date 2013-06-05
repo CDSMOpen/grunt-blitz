@@ -114,6 +114,8 @@ grunt blitz:sprint --blitzid your@email.co.uk --blitzkey blah-blah-blah-blah
 ## Contributing
 Develop in coffee script. Run ```grunt``` to start the compile and test watch processes for convenient TDD. Run ```grunt build``` to test and compile the source before packaging.
 
+Oh yeah, use [Git Flow](https://github.com/nvie/gitflow) - you know it makes sense :)
+
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
