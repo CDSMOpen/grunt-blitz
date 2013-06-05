@@ -1,9 +1,13 @@
 # grunt-blitz
 
-> Run blitz.io sprints and rushes from grunt
+## Load Testing From The Cloud
+
+### And now from grunt tasks too!
+
+> Run [blitz.io](http://www.blitz.io) sprints and rushes from grunt
 
 ## Getting Started
-This plugin requires Grunt `~0.4.1`
+This plugin requires Grunt `~0.4.1`. You'll also need an account with [blitz.io](https://www.blitz.io/signup).
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
@@ -37,49 +41,74 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.blitzid
 Type: `String`
-Default value: `',  '`
+Default value: `null`
 
-A string value that is used to do something with whatever.
-
-#### options.punctuation
+This should be the email address associated with your blitz.io account.
+e.g. `your@email.co.uk`
+#### options.blitzkey
 Type: `String`
-Default value: `'.'`
+Default value: `null`
 
-A string value that is used to do something else with whatever else.
+This is your blitz.io api key.
+e.g. `hedheshi-815the42-15645344-12345678`
+
+N.B. After registering for a [blitz.io](http://www.blitz.io) account, you should be able to find your api details [here](https://www.blitz.io/to#/settings/api_key)
+
+#### options.logPath
+Type: `String`
+Default value: `null`
+
+Optional path to a log file.
+
+#### options.blitz
+Type: `String`
+Default value: `null`
+
+The blitz.io test you wish to run. For details, look [here](https://www.blitz.io/docs)
+
+e.g. `-r ireland http://www.bbc.co.uk`
+
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
-```js
-grunt.initConfig({
-  blitz: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+In this example, we're setting two blitz tests. The first is a simple sprint that checks that www.somepage.co.uk is available from Ireland. The second test is a rush that scales from 1 to 10 concurrent users hitting the site over 100 seconds.
 
 ```js
 grunt.initConfig({
   blitz: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      blitzid: 'your@email.co.uk',
+      blitzkey: 'hedheshi-815the42-15645344-12345678',
+       logPath: 'logs/results.log'
     },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+    sprint: {
+      blitz: '-r ireland http://www.somepage.co.uk',
     },
+    rush: {
+      blitz: '-r ireland -p 1-10:100 http://www.somepage.co.uk'
+    }
   },
 })
+```
+
+You can then run either blitz test with:
+
+```shell
+grunt blitz:sprint
+```
+or
+```shell
+grunt blitz:rush
+```
+
+**Warning:** Don't run `grunt blitz` when you have defined multiple tests without specifiying a specific target task as this may result in spamming the blitz.io api and earn you a slap on the wrist.
+
+#### Authenticating with Blitz.io
+It's probably not a great idea to store your api credentials in the Gruntfile. as an alternative you can omit them from the Gruntfile and pass them in at the command line instead:
+```shell
+grunt blitz:sprint --blitzid your@email.co.uk --blitzkey blah-blah-blah-blah
 ```
 
 ## Contributing
