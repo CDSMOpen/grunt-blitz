@@ -1,7 +1,7 @@
 {
   "name": "grunt-blitz",
   "description": "Run blitz.io sprints and rushes from grunt",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://github.com/CDSMOpen/grunt-blitz",
   "author": {
