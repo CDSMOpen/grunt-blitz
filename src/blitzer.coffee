@@ -19,11 +19,14 @@ module.exports = class Blitzer
 
 
 	run: (done)-> 	
+		# console.log "Executing! "
+		# console.log @options
 		if @options.blitz?
+			@startTime = process.hrtime()
 			rush = @blitz.execute @options.blitz 
 			@logger.log 'event', @options.eventPatterns.blitzStart, @options.blitz
 		else 
-			done() if done?
+			return done() if done?
 
 		rush.on "error", (response)=>
 			@logger.error "error: "+ response.error, response
@@ -31,12 +34,12 @@ module.exports = class Blitzer
 			done()
 
 		rush.on "complete", (data)=>
-			@logger.info "Blitz Complete in "+ data.duration
-			@logger.info data
-			@logger.log "event", @options.eventPatterns.blitzComplete, data.duration
+			# @logger.info "Blitz Complete in "+ data.duration
+			@logger.data data
+			@logger.log "event", @options.eventPatterns.blitzComplete, process.hrtime(@startTime)[0]
 
-			for step in data.steps
-				@logger.info "Step: "+ step.connect, step
+			# for step in data.steps
+			# 	@logger.info "Step: "+ step.connect, step
 
 			done()
 
@@ -46,7 +49,7 @@ module.exports = class Blitzer
 			filename: logPath
 			colorize: false
 			json: true
-			level: 'event'
+			level: 'data'
 
 	_makeLogger: (logPath)->
 		customLevels = @_getLogLevels()
@@ -69,11 +72,13 @@ module.exports = class Blitzer
 				info: 2
 				warn: 3
 				error: 4
+				data: 0
 			colors:
 				event: 'white'
 				info: 'white'
 				warn: 'yellow'
 				error: 'red'
+				data: 'white'
 		}
 
 

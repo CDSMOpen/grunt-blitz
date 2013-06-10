@@ -67,15 +67,14 @@ module.exports = (grunt) ->
     
     # Configuration to be run (and then tested).
     blitz:
-      test:
+      options:
+        logPath: './logs/blitztest.log'
+
+      sprint:
         options:
-          logPath: './logs/blitztest.log'
           # blitzid: 'account@mail.co.uk' # your account email with blitz.io 
           # blitzkey: 'your-blitz-key' # from your blitz.io account
-          blitz: '-r ireland http://www.cdsm.co.uk'
-
-      
-
+          blitz: '-r ireland http://www.bbc.co.uk'
 
   
   # Actually load this plugin's task(s).

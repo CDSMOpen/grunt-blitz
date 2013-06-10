@@ -34,6 +34,7 @@ module.exports = (grunt) ->
 
     @requiresConfig "blitzid" unless options.blitzid?
     @requiresConfig "blitzkey" unless options.blitzkey?
+    @requiresConfig "blitz" unless options.blitz?
 
     blitz = new Blitzer options.blitzid, options.blitzkey, options
     blitz.run done
