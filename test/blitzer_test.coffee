@@ -30,6 +30,7 @@ loggerInstance = {
 	error: sinon.stub()
 	info: sinon.stub()
 	event: sinon.stub()
+	data: sinon.stub()
 }
 
 blitzConstructor = sinon.stub().returns blitzInstance
@@ -124,7 +125,7 @@ describe "blitzer", ->
 					done()
 			it "should log the blitz complete event", (done)->
 				@sut.run =>
-					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzComplete, 10
+					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzComplete
 					done()
 
 
