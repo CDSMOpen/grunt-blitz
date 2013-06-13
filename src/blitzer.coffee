@@ -12,7 +12,7 @@ module.exports = class Blitzer
 			blitzComplete: "Blitz complete: %s"
 
 	constructor: (@blitzId, @blitzKey, options)->
-		@options = Hash.update options, Blitzer.DEFAULTS
+		@options = Hash.update Blitzer.DEFAULTS, options
 		@blitz = new Blitz @blitzId, @blitzKey
 		@logger = @_makeLogger()
 		@_addFileLogging(@logger, @options.logPath) if @options.logPath
