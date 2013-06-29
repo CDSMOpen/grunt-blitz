@@ -120,3 +120,5 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 1.0.0 - First release. Whoop!
+
+1.1.0 - AppDex support
