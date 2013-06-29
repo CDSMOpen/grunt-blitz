@@ -18,7 +18,9 @@ module.exports = class Blitzer
 		@_addFileLogging(@logger, @options.logPath) if @options.logPath
 
 
-	run: (done) -> 	
+	run: (done)-> 	
+		# console.log "Executing! "
+		# console.log @options
 		if @options.blitz?
 			@startTime = process.hrtime()
 			rush = @blitz.execute @options.blitz 
@@ -26,17 +28,22 @@ module.exports = class Blitzer
 		else 
 			return done() if done?
 
-		rush.on "error", (response) =>
+		rush.on "error", (response)=>
 			@logger.error "error: "+ response.error, response
 			@logger.log "event", @options.eventPatterns.blitzError, response.error, response
 			done()
 
-		rush.on "complete", (data) =>
+		rush.on "complete", (data)=>
+			# @logger.info "Blitz Complete in "+ data.duration
 			@logger.data data
 			@logger.log "event", @options.eventPatterns.blitzComplete, process.hrtime(@startTime)[0]
+
+			# for step in data.steps
+			# 	@logger.info "Step: "+ step.connect, step
+
 			done()
 
-	_addFileLogging: (logger, logPath) ->
+	_addFileLogging: (logger, logPath)->
 		logger.info "logging to file ", logPath
 		logger.add Winston.transports.File, 
 			filename: logPath
@@ -44,7 +51,7 @@ module.exports = class Blitzer
 			json: true
 			level: 'data'
 
-	_makeLogger: (logPath) ->
+	_makeLogger: (logPath)->
 		customLevels = @_getLogLevels()
 		logger = new Winston.Logger {
 			transports: [
