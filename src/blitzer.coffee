@@ -9,11 +9,7 @@ module.exports = class Blitzer
 		eventPatterns: 
 			blitzStart: "Blitz start: %s"
 			blitzError: "Blitz error: %s"
-			blitzFail: "Blitz failed: %s"
 			blitzComplete: "Blitz complete: %s"
-		appdex:
-			fails: 10
-			avgResponse: 5
 
 	constructor: (@blitzId, @blitzKey, options)->
 		@options = Hash.update Blitzer.DEFAULTS, options
@@ -36,21 +32,7 @@ module.exports = class Blitzer
 			done()
 
 		rush.on "complete", (data) =>
-		 	steps = data.steps;
-		 	totalErrorsAndTimeouts = 0
-		 	durations = []
-    		for i in steps
-        		step = steps[i]
-        		durations.push step.duration
-        		totalErrorsAndTimeouts += step.timeouts + step.errors
-        		
-        	avgduration = durations.sum() / durations.length
-        	if avgduration > @options.appdex.avgResponse
-        		@logger.log "event", @options.eventPatterns.blitzFail, avgduration
-        	if totalErrorsAndTimeouts > @options.appdex.fails
-        		@logger.log "event", @options.eventPatterns.blitzFail, totalErrorsAndTimeouts        		
-        		
-        	@logger.data data
+			@logger.data data
 			@logger.log "event", @options.eventPatterns.blitzComplete, process.hrtime(@startTime)[0]
 			done()
 
