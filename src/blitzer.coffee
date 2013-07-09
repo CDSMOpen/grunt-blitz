@@ -47,7 +47,7 @@ module.exports = class Blitzer
 
 	        	if avgduration > @options.appdex.avgResponse
 	        		@logger.log "event", @options.eventPatterns.blitzFail, avgduration
-	        	if totalErrorsAndTimeouts > @options.appdex.fails
+	        	else if totalErrorsAndTimeouts > @options.appdex.fails
 	        		@logger.log "event", @options.eventPatterns.blitzFail, totalErrorsAndTimeouts 
 	        else
 	        	if data.duration > @options.appdex.avgResponse
