@@ -169,7 +169,7 @@ describe "blitzer", ->
 			rushInstance.on.withArgs("complete").yields {
 				region: 'ireland'
 				duration: 10
-				steps: [step1]
+				timeline: [step1]
 			}
 
 			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', @blitzOptions)
@@ -243,7 +243,7 @@ describe "blitzer", ->
 			rushInstance.on.withArgs("complete").yields {
 				region: 'ireland'
 				duration: 10
-				steps: [step1]
+				timeline: [step1]
 			}
 
 			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', @blitzOptions)
@@ -317,7 +317,7 @@ describe "blitzer", ->
 			rushInstance.on.withArgs("complete").yields {
 				region: 'ireland'
 				duration: 10
-				steps: [step1]
+				timeline: [step1]
 			}
 
 			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', @blitzOptions)
@@ -391,7 +391,7 @@ describe "blitzer", ->
 			rushInstance.on.withArgs("complete").yields {
 				region: 'ireland'
 				duration: 10
-				steps: [step1]
+				timeline: [step1]
 			}
 
 			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', @blitzOptions)

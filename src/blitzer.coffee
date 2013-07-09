@@ -35,19 +35,23 @@ module.exports = class Blitzer
 			done()
 
 		rush.on "complete", (data) =>
-			totalErrorsAndTimeouts = 0
-			duration = 0
-			for step in data.steps
-        		duration += step.duration
-        		totalErrorsAndTimeouts += step.timeouts + step.errors
-        		
-        	avgduration = duration / data.steps.length
-        	console.log avgduration
-        	console.log @options.appdex.avgResponse
-        	if avgduration > @options.appdex.avgResponse
-        		@logger.log "event", @options.eventPatterns.blitzFail, avgduration
-        	if totalErrorsAndTimeouts > @options.appdex.fails
-        		@logger.log "event", @options.eventPatterns.blitzFail, totalErrorsAndTimeouts 
+			if data.timeline?
+				totalErrorsAndTimeouts = 0
+				duration = 0
+
+				for point in data.timeline
+	       			duration += point.duration
+	       			totalErrorsAndTimeouts += point.timeouts + point.errors
+	            	
+	        	avgduration = duration / data.timeline.length
+
+	        	if avgduration > @options.appdex.avgResponse
+	        		@logger.log "event", @options.eventPatterns.blitzFail, avgduration
+	        	if totalErrorsAndTimeouts > @options.appdex.fails
+	        		@logger.log "event", @options.eventPatterns.blitzFail, totalErrorsAndTimeouts 
+	        else
+	        	if data.duration > @options.appdex.avgResponse
+	        		@logger.log "event", @options.eventPatterns.blitzFail, data.duration
 
 			@logger.log "event", @options.eventPatterns.blitzComplete, process.hrtime(@startTime)[0]
 			done()
