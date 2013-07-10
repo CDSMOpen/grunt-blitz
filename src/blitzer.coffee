@@ -8,8 +8,8 @@ module.exports = class Blitzer
 	@DEFAULTS:
 		eventPatterns: 
 			blitzStart: "Blitz start: %s"
-			blitzError: "Blitz error: %s"
-			blitzFail: "Blitz failed: %s"
+			blitzError: "Blitz error: %s %s"
+			blitzFail: "Blitz failed: %s %s"
 			blitzComplete: "Blitz complete: %s"
 		appdex:
 			fails: 10
@@ -22,16 +22,16 @@ module.exports = class Blitzer
 		@_addFileLogging(@logger, @options.logPath) if @options.logPath
 
 	run: (done) -> 	
+		runname = ""		
 		if @options.blitz?
-			@startTime = process.hrtime()
-			rush = @blitz.execute @options.blitz 
-			@logger.log 'event', @options.eventPatterns.blitzStart, @options.blitz
+			runname = @cleanBlitzStr @options.blitz
+			rush = @blitz.execute @options.blitz 			
+			@logger.log 'event', @options.eventPatterns.blitzStart, runname
 		else 
 			return done() if done?
 
 		rush.on "error", (response) =>
-			@logger.error "error: " + response.error, response
-			@logger.log "event", @options.eventPatterns.blitzError, response.error, response
+			@logger.log "event", @options.eventPatterns.blitzError, runname, response.error
 			done()
 
 		rush.on "complete", (data) =>
@@ -46,18 +46,21 @@ module.exports = class Blitzer
 	        	avgduration = duration / data.timeline.length
 
 	        	if avgduration > @options.appdex.avgResponse
-	        		@logger.log "event", @options.eventPatterns.blitzFail, avgduration
+	        		@logger.log "event", @options.eventPatterns.blitzFail, runname, avgduration
 	        	else if totalErrorsAndTimeouts > @options.appdex.fails
-	        		@logger.log "event", @options.eventPatterns.blitzFail, totalErrorsAndTimeouts 
+	        		@logger.log "event", @options.eventPatterns.blitzFail, runname, totalErrorsAndTimeouts 
 	        else
 	        	if data.duration > @options.appdex.avgResponse
-	        		@logger.log "event", @options.eventPatterns.blitzFail, data.duration
+	        		@logger.log "event", @options.eventPatterns.blitzFail, runname, data.duration
 
-			@logger.log "event", @options.eventPatterns.blitzComplete, process.hrtime(@startTime)[0]
+			@logger.log "event", @options.eventPatterns.blitzComplete, runname
 			done()
 
+	# Clean the blitz string to remove any string breaking characters so logging is nicer
+	cleanBlitzStr: (blitzStr) ->
+		blitzStr
+
 	_addFileLogging: (logger, logPath) ->
-		logger.info "logging to file ", logPath
 		logger.add Winston.transports.File, 
 			filename: logPath
 			colorize: false

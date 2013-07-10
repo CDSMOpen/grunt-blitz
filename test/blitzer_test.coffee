@@ -132,10 +132,6 @@ describe "blitzer", ->
 				@sut.run =>
 					loggerInstance.log.should.not.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzFail
 					done()
-			it "should log the blitz results", (done)->
-				@sut.run =>
-					loggerInstance.info.should.have.been.called
-					done()
 			it "should log the blitz complete event", (done)->
 				@sut.run =>
 					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzComplete
@@ -205,10 +201,6 @@ describe "blitzer", ->
 			it "should log the blitz fail event", (done)->
 				@sut.run =>
 					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzFail
-					done()
-			it "should log the blitz results", (done)->
-				@sut.run =>
-					loggerInstance.info.should.have.been.called
 					done()
 			it "should log the blitz complete event", (done)->
 				@sut.run =>
@@ -280,10 +272,6 @@ describe "blitzer", ->
 				@sut.run =>
 					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzFail
 					done()
-			it "should log the blitz results", (done)->
-				@sut.run =>
-					loggerInstance.info.should.have.been.called
-					done()
 			it "should log the blitz complete event", (done)->
 				@sut.run =>
 					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzComplete
@@ -353,10 +341,6 @@ describe "blitzer", ->
 			it "should log the blitz fail event", (done)->
 				@sut.run =>
 					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzFail
-					done()
-			it "should log the blitz results", (done)->
-				@sut.run =>
-					loggerInstance.info.should.have.been.called
 					done()
 			it "should log the blitz complete event", (done)->
 				@sut.run =>
@@ -428,15 +412,38 @@ describe "blitzer", ->
 				@sut.run =>
 					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzFail
 					done()
-			it "should log the blitz results", (done)->
-				@sut.run =>
-					loggerInstance.info.should.have.been.called
-					done()
 			it "should log the blitz complete event", (done)->
 				@sut.run =>
 					loggerInstance.log.should.have.been.calledWith "event", @blitzOptions.eventPatterns.blitzComplete
 					done()
 
+	describe "clean blitz string", ->
+
+		beforeEach ->
+			@blitzOptions = 
+				blitz: '-r ireland http://www.cdsm.co.uk'
+				logPath: './some/duff/file.txt'
+				eventPatterns: 
+					blitzStart: "## Blitz start %s"
+					blitzError: "## Blitz error %s"
+					blitzComplete: "## Blitz complete"
+
+			sinon.stub( blitzInstance, 'execute').returns rushInstance
+			sinon.stub rushInstance, 'on'
+			sinon.stub( winstonInstance, 'Logger').returns loggerInstance
+			sinon.stub loggerInstance, 'add'
+
+			@sut = new blitzer( 'myBlitzId@duff.com','some-blitz-id', @blitzOptions)
+
+		afterEach ->
+			blitzInstance.execute.restore()
+			rushInstance.on.restore()
+			winstonInstance.Logger.restore()
+			loggerInstance.add.restore()
+			
+		it "should remove the character opener", ->
+			str = @sut.cleanBlitzStr "-p 10-100:10 -T <%= mlsapi.timeout %> -r ireland -u <%= mlsapi.user %> -H 'Accept-Encoding: gzip, deflate' https://mysite.co.uk/Some/Controller/Action"
+			str.should.equal ""
 
 	describe "log errors", ->
 		beforeEach ->
@@ -466,13 +473,8 @@ describe "blitzer", ->
 			winstonInstance.Logger.restore()
 			loggerInstance.add.restore()
 
-		it "should log the blitz error", (done)->
-			@sut.run ->
-				loggerInstance.error.should.have.been.called
-				done()
-
 		it "should log the blitz error event", (done)->
 			@sut.run =>
-				loggerInstance.log.should.have.been.calledWith 'event', @blitzOptions.eventPatterns.blitzError, 'duff error'
+				loggerInstance.log.should.have.been.calledWith 'event', @blitzOptions.eventPatterns.blitzError, @blitzOptions.blitz, 'duff error'
 				done()
 
