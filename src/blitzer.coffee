@@ -58,7 +58,7 @@ module.exports = class Blitzer
 
 	# Clean the blitz string to remove any string breaking characters so logging is nicer
 	cleanBlitzStr: (blitzStr) ->
-		blitzStr
+		blitzStr.replace(/[^\w\s-:,\/.]/gi, '')
 
 	_addFileLogging: (logger, logPath) ->
 		logger.add Winston.transports.File, 

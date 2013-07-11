@@ -442,8 +442,8 @@ describe "blitzer", ->
 			loggerInstance.add.restore()
 			
 		it "should remove the character opener", ->
-			str = @sut.cleanBlitzStr "-p 10-100:10 -T <%= mlsapi.timeout %> -r ireland -u <%= mlsapi.user %> -H 'Accept-Encoding: gzip, deflate' https://mysite.co.uk/Some/Controller/Action"
-			str.should.equal ""
+			str = @sut.cleanBlitzStr "-p 10-100:10 -T 5000 -r ireland -u user:password -H 'Accept-Encoding: gzip, deflate' https://mysite.co.uk/Some/Controller/Action"
+			str.should.equal "-p 10-100:10 -T 5000 -r ireland -u user:password -H Accept-Encoding: gzip, deflate https://mysite.co.uk/Some/Controller/Action"
 
 	describe "log errors", ->
 		beforeEach ->
